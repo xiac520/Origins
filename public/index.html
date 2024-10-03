@@ -54,17 +54,17 @@
         <div class="usage-example">
           <h4>设置响应字符编码 (charset)</h4>
           <p>描述: 设置响应字符编码 (charset)</p>
-          <code>https://www.dnscron.com/get?charset=ISO-8859-1&url=https://pt.wikipedia.org/</code>
+          <code>https://www.dnscron.com/get/charset=ISO-8859-1/https://example.org/</code>
         </div>
         <div class="usage-example">
           <h4>获取原始内容 (CORS)</h4>
           <p>描述: 获取原始内容 (CORS)</p>
-          <code>https://www.dnscron.com/raw?url=https://example.org/</code>
+          <code>https://www.dnscron.com/get/https://example.org/</code>
         </div>
         <div class="usage-example">
           <h4>获取 JSONP 响应</h4>
           <p>描述: 获取 JSONP 响应</p>
-          <code>https://www.dnscron.com/get?callback=myFunc&url=https://example.org/</code>
+          <code>https://www.dnscron.com/jsonp/callback=myFunc/https://example.org/</code>
         </div>
       </div>
       <div class="col-md-6">
@@ -83,8 +83,8 @@
             <input type="text" id="callback" name="callback" class="form-control">
           </div>
           <div class="form-check">
-            <input type="checkbox" id="raw" name="raw" class="form-check-input">
-            <label for="raw" class="form-check-label">原始内容 (CORS)</label>
+            <input type="checkbox" id="jsonp" name="jsonp" class="form-check-input">
+            <label for="jsonp" class="form-check-label">JSONP 响应</label>
           </div>
           <button type="submit" class="btn btn-primary">获取内容</button>
         </form>
@@ -109,15 +109,16 @@
       const url = document.getElementById('url').value;
       const charset = document.getElementById('charset').value;
       const callback = document.getElementById('callback').value;
-      const raw = document.getElementById('raw').checked;
+      const jsonp = document.getElementById('jsonp').checked;
 
-      let proxyUrl = `https://www.dnscron.com/${raw ? 'raw' : 'get'}?url=${encodeURIComponent(url)}`;
+      let proxyUrl = `https://www.dnscron.com/${jsonp ? 'jsonp' : 'get'}/`;
       if (charset) {
-        proxyUrl += `&charset=${encodeURIComponent(charset)}`;
+        proxyUrl += `charset=${encodeURIComponent(charset)}/`;
       }
-      if (callback) {
-        proxyUrl += `&callback=${encodeURIComponent(callback)}`;
+      if (jsonp && callback) {
+        proxyUrl += `callback=${encodeURIComponent(callback)}/`;
       }
+      proxyUrl += encodeURIComponent(url);
 
       try {
         const response = await fetch(proxyUrl);

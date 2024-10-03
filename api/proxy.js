@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   const pathSegments = url.pathname.split('/').filter(segment => segment);
   const queryParams = url.searchParams;
 
-  const targetUrl = queryParams.get('url');
+  const targetUrl = pathSegments.slice(2).join('/'); // 从路径中获取目标URL
   const charset = queryParams.get('charset');
   const callback = queryParams.get('callback');
 
@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
     }
 
     // 处理原始内容
-    if (pathSegments[0] === 'raw') {
+    if (pathSegments[0] === 'get') {
       res.setHeader('content-type', contentType);
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
     }
 
     // 处理 JSONP
-    if (callback) {
+    if (pathSegments[0] === 'jsonp' && callback) {
       const jsonResponse = JSON.stringify({
         status: response.status,
         statusText: response.statusText,
