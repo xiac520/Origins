@@ -103,8 +103,20 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="api.js"></script>
   <script>
+    async function fetchAPI(url, charset, callback, raw) {
+      let apiUrl = `https://origins.dnscron.com/api/${raw ? 'raw' : 'get'}?url=${encodeURIComponent(url)}`
+      if (charset) {
+        apiUrl += `&charset=${encodeURIComponent(charset)}`
+      }
+      if (callback) {
+        apiUrl += `&callback=${encodeURIComponent(callback)}`
+      }
+
+      const response = await axios.get(apiUrl)
+      return response.data
+    }
+
     document.getElementById('fetchForm').addEventListener('submit', async function(event) {
       event.preventDefault();
 
