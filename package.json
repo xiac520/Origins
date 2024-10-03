@@ -1,0 +1,17 @@
+{
+  "name": "origins",
+  "version": "1.0.0",
+  "description": "A simple project to demonstrate the Origins feature running on Vercel.",
+  "main": "api/proxy.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "iconv-lite": "^0.6.3",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "@vercel/node": "^2.6.0"
+  }
+}
