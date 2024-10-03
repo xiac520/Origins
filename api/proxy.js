@@ -2,11 +2,11 @@ const fetch = require('node-fetch');
 const iconv = require('iconv-lite');
 
 module.exports = async (req, res) => {
-  const allowedOrigin = 'https://www.dnscron.com';
+  const allowedOrigins = ['https://www.dnscron.com', 'https://origins-seven.vercel.app'];
   const requestOrigin = req.headers.origin || req.headers.referer;
 
   // 检查请求来源是否为允许的域名
-  if (requestOrigin !== allowedOrigin) {
+  if (!allowedOrigins.includes(requestOrigin)) {
     res.status(403).send('禁止访问');
     return;
   }
@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
     // 处理原始内容
     if (pathSegments[0] === 'raw') {
       res.setHeader('content-type', contentType);
-      res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+      res.setHeader('Access-Control-Allow-Origin', requestOrigin);
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
       res.status(response.status).send(body);
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
     }
 
     res.setHeader('content-type', contentType);
-    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.status(response.status).send(body);
