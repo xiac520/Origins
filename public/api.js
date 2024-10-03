@@ -9,9 +9,10 @@ async function fetchAPI(url, charset, callback, raw) {
     proxyUrl += `&callback=${encodeURIComponent(callback)}`;
   }
 
-  const response = await fetch(proxyUrl);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await axios.get(proxyUrl);
+    return response.data;
+  } catch (error) {
+    throw new Error(`HTTP error! status: ${error.response.status}`);
   }
-  return await response.text();
 }
