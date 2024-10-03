@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, text-size-adjust=100%">
   <meta name="description" content="使用Vercel上的Origins功能解决CORS跨域访问问题。灵感来源于allOrigins。">
   <meta name="keywords" content="CORS, 跨域访问, Vercel, Origins, allOrigins">
   <title>Origins on Vercel</title>
@@ -102,6 +102,7 @@
     </div>
   </div>
 
+  <script src="api.js"></script>
   <script>
     document.getElementById('fetchForm').addEventListener('submit', async function(event) {
       event.preventDefault();
@@ -111,18 +112,9 @@
       const callback = document.getElementById('callback').value;
       const raw = document.getElementById('raw').checked;
 
-      let proxyUrl = `${process.env.NEXT_PUBLIC_API_URL}/${raw ? 'raw' : 'get'}?url=${encodeURIComponent(url)}`;
-      if (charset) {
-        proxyUrl += `&charset=${encodeURIComponent(charset)}`;
-      }
-      if (callback) {
-        proxyUrl += `&callback=${encodeURIComponent(callback)}`;
-      }
-
       try {
-        const response = await fetch(proxyUrl);
-        const text = await response.text();
-        document.getElementById('response').textContent = text;
+        const response = await fetchAPI(url, charset, callback, raw);
+        document.getElementById('response').textContent = response;
       } catch (error) {
         document.getElementById('response').textContent = `获取内容时出错: ${error.message}`;
       }
