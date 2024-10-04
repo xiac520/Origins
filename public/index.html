@@ -1,141 +1,132 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, text-size-adjust=100%">
-  <meta name="description" content="使用Vercel上的Origins功能解决CORS跨域访问问题。灵感来源于allOrigins。">
-  <meta name="keywords" content="CORS, 跨域访问, Vercel, Origins, allOrigins">
-  <title>Origins on Vercel</title>
-  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .usage-example {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
-    .response-box {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 14px;
-      color: #6c757d;
-    }
-    .beian-logo {
-      width: 20px;
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Origins - 通过 API 获取任何页面的内容</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="通过 API 获取任何页面的内容（JSON/P 或原始内容），并避免同源策略问题。">
+<meta name="keywords" content="Origins, API, JSONP, CORS, 同源策略, 跨域请求">
+<meta name="author" content="Your Name">
+<link rel="canonical" href="https://yourwebsite.com/">
+<link rel="stylesheet" type="text/css" href="css/styles.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.2.0/styles/default.min.css" />
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">Origins on Vercel</h1>
-    <p class="text-center mb-5">这是一个简单的页面，用于演示运行在 Vercel 上的 Origins 功能。使用此功能，可以解决CORS跨域访问问题。灵感来源于 <a href="https://allorigins.win" target="_blank">allOrigins</a>。</p>
-
-    <div class="row">
-      <div class="col-md-6">
-        <h2 class="mb-3">使用方法</h2>
-        <div class="usage-example">
-          <h4>设置响应字符编码 (charset)</h4>
-          <p>描述: 设置响应字符编码 (charset)</p>
-          <code>https://origins.dnscron.com/api/get?charset=ISO-8859-1&url=https://pt.wikipedia.org/</code>
-        </div>
-        <div class="usage-example">
-          <h4>获取原始内容 (CORS)</h4>
-          <p>描述: 获取原始内容 (CORS)</p>
-          <code>https://origins.dnscron.com/api/raw?url=https://example.org/</code>
-        </div>
-        <div class="usage-example">
-          <h4>获取 JSONP 响应</h4>
-          <p>描述: 获取 JSONP 响应</p>
-          <code>https://origins.dnscron.com/api/get?callback=myFunc&url=https://example.org/</code>
+  <!-- Header -->
+  <div class="hero-head">
+    <section class="hero is-dark is-small" id="contact">
+      <div class="container">
+        <div class="header-titles">
+          <h1 class="title is-3 is-spaced">Origins</h1>
+          <h2 class="subtitle is-5 is-spaced">
+            通过 API 获取任何页面的内容（JSON/P 或原始内容），并避免同源策略问题。
+          </h2>
         </div>
       </div>
-      <div class="col-md-6">
-        <h2 class="mb-3">尝试一下</h2>
-        <form id="fetchForm" class="form">
-          <div class="form-group">
-            <label for="url">输入 URL：</label>
-            <input type="text" id="url" name="url" required class="form-control" value="https://pt.wikipedia.org/">
-          </div>
-          <div class="form-group">
-            <label for="charset">字符集：</label>
-            <input type="text" id="charset" name="charset" class="form-control" value="ISO-8859-1">
-          </div>
-          <div class="form-group">
-            <label for="callback">回调函数：</label>
-            <input type="text" id="callback" name="callback" class="form-control" value="myFunc">
-          </div>
-          <div class="form-check">
-            <input type="checkbox" id="raw" name="raw" class="form-check-input">
-            <label for="raw" class="form-check-label">原始内容 (CORS)</label>
-          </div>
-          <button type="submit" class="btn btn-primary">获取内容</button>
-        </form>
+    </section>
+  </div>
 
-        <h2 class="mt-5">响应内容</h2>
-        <pre id="response" class="response-box"></pre>
+  <!-- Examples -->
+  <div class="content-block">
+    <section class="hero">
+      <div class="container">
+        <div class="content">
+          <h3 class="title is-4 is-spaced">示例</h3>
+          <div class="columns is-multiline">
+            <div class="column is-6">
+              <div class="pre-wrapper">
+                <p>从 <a href="https://example.org">https://example.org</a> 获取数据：</p>
+                <pre><code class="language-js">fetch(`https://origins.dnscron.com/get?url=${encodeURIComponent('https://example.org')}`)
+  .then(response => {
+    if (response.ok) return response.json();
+    throw new Error('网络响应不正确。');
+  })
+  .then(data => console.log(data.contents));
+</code></pre>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="pre-wrapper">
+                <p>或者使用 jQuery</p>
+                <pre><code class="language-js">$.getJSON('https://origins.dnscron.com/get?url=' + encodeURIComponent('https://example.org'), function (data) {
+  alert(data.contents);
+});
+</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+    <hr/>
+  </div>
 
-    <div class="footer">
-      <a href="http://beian.miit.gov.cn/" target="_blank">
-        <img src="https://beian.miit.gov.cn/img/beian.png" alt="备案logo" class="beian-logo">
-        蜀ICP备2023042966号
-      </a>
+  <!-- Options -->
+  <div class="content-block">
+    <section class="hero">
+      <div class="container">
+        <div class="content">
+          <h3 class="title is-3">选项</h3>
+          <div class="pre-wrapper">
+            <h4><a id="charset_34"></a>charset</h4>
+            <p><strong>描述:</strong> 设置响应字符编码 (charset) <br>
+            <strong>示例:</strong> <code>https://origins.dnscron.com/get?charset=ISO-8859-1&amp;url=https://example.org/</code></p>
+            <hr>
+            <h4><a id="raw_39"></a>raw</h4>
+            <p><strong>描述:</strong> 获取原始内容 (<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a>) <br>
+            <strong>示例:</strong> <code>https://origins.dnscron.com/raw?url=https://example.org/</code></p>
+            <hr>
+            <h4><a id="callback_43"></a>callback</h4>
+            <p><strong>描述:</strong> 获取 JSONP 响应 <br>
+            <strong>示例:</strong> <code>https://origins.dnscron.com/get?callback=myFunc&amp;url=https://example.org/</code></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr/>
+  </div>
+
+  <!-- Try It -->
+  <div class="content-block">
+    <section class="hero">
+      <div class="container">
+        <div class="content">
+          <h3 class="title is-4">自己试试吧！</h3>
+          <div class="main-text">
+            <p>
+              <form onSubmit="return GoGoGadget();">
+                https://origins.dnscron.com/get?url=
+                <input class="input" type="text" id="url" value="https://example.org/" /><button class="button is-dark">获取</button>
+              </form>
+              <br>
+              <p>示例代码</p>
+              <p>
+                <pre><code class="js" id="jsonp">...</code></pre>
+              </p>
+              <p>示例 JSON 输出</p>
+              <p>
+                <textarea id="output-json" style="width:100%;" rows="4"></textarea>
+              </p>
+              <p>示例 iframe 输出</p>
+              <p>
+                <iframe id="output" style="border:1px solid; width: 100%; height: 250px"></iframe>
+              </p>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr/>
+  </div>
+
+  <!-- Footer -->
+  <div class="hero-footer footer">
+    <div class="container has-text-centered">
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    async function fetchAPI(url, charset, callback, raw) {
-      let apiUrl = `https://origins.dnscron.com/api/${raw ? 'raw' : 'get'}?url=${encodeURIComponent(url)}`
-      if (charset) {
-        apiUrl += `&charset=${encodeURIComponent(charset)}`
-      }
-      if (callback) {
-        apiUrl += `&callback=${encodeURIComponent(callback)}`
-      }
-
-      const response = await axios.get(apiUrl)
-      return response.data
-    }
-
-    document.getElementById('fetchForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
-
-      const url = document.getElementById('url').value;
-      const charset = document.getElementById('charset').value;
-      const callback = document.getElementById('callback').value;
-      const raw = document.getElementById('raw').checked;
-
-      try {
-        const response = await fetchAPI(url, charset, callback, raw);
-        document.getElementById('response').textContent = response;
-      } catch (error) {
-        document.getElementById('response').textContent = `获取内容时出错: ${error.message}`;
-      }
-    });
-  </script>
-
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.6.3/js/all.js" integrity="sha384-EIHISlAOj4zgYieurP0SdoiBYfGJKkgWedPHH4jCzpCXLmzVsw1ouK59MuUtP4a1" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
 </body>
 </html>

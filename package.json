@@ -1,0 +1,14 @@
+{
+  "name": "origins",
+  "version": "1.0.0",
+  "description": "通过 API 获取任何页面的内容（JSON/P 或原始内容），并避免同源策略问题。",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
